@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
+</head>
+<body>
+  <p>
+    <b>
+      <h1 align = "center"> Meteorite Landings Data Analysis and Visualisations </h1>
+      
+    </b>
+    
+  </p>
+  <p>
+    <h2 align = "right">Text ................... </h2>
+   </p>
+  <div id="vis"/>
+  <script>
+    var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 450,
+  "title": "The greatest number of meteorite landings in a country, with meteorites falling worldwide",
+  "projection": {"type": "equalEarth"},
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/JiazhouLiu/FIT3179/main/VegaLite/2_symbol_map/js/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/rkal0013/FIT3179/main/Meteorite_landings/meteorite_landings_prod.csv"
+      },
+      "mark": {"type": "circle", "tooltip": {"content": "data"}},
+      "encoding": {
+        "longitude": {"field": "longitude", "type": "quantitative"},
+        "latitude": {"field": "latitude", "type": "quantitative"},
+        "color": {
+          "field": "mass",
+          "type": "quantitative",
+          "title": "Mass of the meteorite",
+          "scale": {"scheme": "viridis"}
+        }
+      }
+    }
+  ],
+  "config": {}
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+  <h2 align = "right"> text till here</h2>
+ 
+  <p>
+
+
+  </p>
+  <p>
+    <h2 align = "left"> Word Cloud of the most famous meteorites</h2>
+  </p>
+  <h2 align = "right"> Text here about the meteorites</h2>
+   <div id="vis2"/>
+  <script>
+    var spec1 = {
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "A word cloud visualization depicting Vega research paper abstracts.",
+  "width": 800,
+  "height": 400,
+  "padding": 0,
+  "data": [
+    {
+      "name": "table",
+      "values": [
+        " Ojuelos Altos",
+        "Oldenburg (1930)",
+        "Oliva-Gandia",
+        "Olivenza",
+        "Peace River",
+        "Peckelsheim",
+        "Peekskill",
+        "PeÃ±a Blanca Spring",
+        "Peramiho",
+        "Raco",
+        "Red Canyon Lake",
+        "Richland Springs",
+        "Wethersfield (1982)",
+        "Yonozu",
+        "Yorktown (New York)",
+        "Zag",
+        "Zagami",
+        "Zvonkov ",
+        "Slavetic",
+        "Slobodka",
+        "Soheria",
+        "Soko-Banja",
+        "Sologne"
+      ],
+      "transform": [
+        {
+          "type": "countpattern",
+          "field": "data",
+          "case": "upper",
+          "pattern": "[\\w']{3,}",
+          "stopwords": "(i|me|my|myself|we|us|our|ours|ourselves|you|your|yours|yourself|yourselves|he|him|his|himself|she|her|hers|herself|it|its|itself|they|them|their|theirs|themselves|what|which|who|whom|whose|this|that|these|those|am|is|are|was|were|be|been|being|have|has|had|having|do|does|did|doing|will|would|should|can|could|ought|i'm|you're|he's|she's|it's|we're|they're|i've|you've|we've|they've|i'd|you'd|he'd|she'd|we'd|they'd|i'll|you'll|he'll|she'll|we'll|they'll|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|doesn't|don't|didn't|won't|wouldn't|shan't|shouldn't|can't|cannot|couldn't|mustn't|let's|that's|who's|what's|here's|there's|when's|where's|why's|how's|a|an|the|and|but|if|or|because|as|until|while|of|at|by|for|with|about|against|between|into|through|during|before|after|above|below|to|from|up|upon|down|in|out|on|off|over|under|again|further|then|once|here|there|when|where|why|how|all|any|both|each|few|more|most|other|some|such|no|nor|not|only|own|same|so|than|too|very|say|says|said|shall)"
+        },
+        {
+          "type": "formula",
+          "as": "angle",
+          "expr": "[-45, 0, 45][~~(random() * 3)]"
+        },
+        {
+          "type": "formula",
+          "as": "weight",
+          "expr": "if(datum.text=='zonkov', 600, 300)"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "table", "field": "text"},
+      "range": ["#d5a928", "#652c90", "#939597"]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "text": {"field": "text"},
+          "align": {"value": "center"},
+          "baseline": {"value": "alphabetic"},
+          "fill": {"scale": "color", "field": "text"}
+        },
+        "update": {"fillOpacity": {"value": 1}},
+        "hover": {"fillOpacity": {"value": 0.5}}
+      },
+      "transform": [
+        {
+          "type": "wordcloud",
+          "size": [800, 400],
+          "text": {"field": "text"},
+          "rotate": {"field": "datum.angle"},
+          "font": "Helvetica Neue, Arial",
+          "fontSize": {"field": "datum.count"},
+          "fontWeight": {"field": "datum.weight"},
+          "fontSizeRange": [12, 56],
+          "padding": 2
+        }
+      ]
+    }
+  ],
+  "config": {}
+};
+    vegaEmbed("#vis2", spec1, {mode: "vega"}).then(console.log).catch(console.warn);
+  </script>
+  <p>
+    <h3 align = "center"> Tap on the bar graph to see the changes or see the highlighted area on the current visualisation</h3>
+  </p>
+   <div id="vis3"/>
+   <script>
+     var spec2 = {
+   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+   "title": "Meteorite Status Analysis",
+   "data": {
+     "url": "https://raw.githubusercontent.com/rkal0013/FIT3179/main/Meteorite_landings/meteorite_landings_prod.csv"
+   },
+   "vconcat": [
+     {
+       "encoding": {
+         "color": {
+           "condition": {
+             "param": "brush",
+             "title": "Recclass",
+             "field": "recclass",
+             "type": "nominal",
+             "scale": {
+               "domain": ["H4", "L4", "H6", "H5", "L5"],
+               "range": ["#e7ba52", "#a7a7a7", "#aec7e8", "#1f77b4", "#9467bd"]
+             }
+           },
+           "value": "lightgray"
+         },
+         "size": {
+           "title": "Mass Distribution",
+           "field": "mass",
+           "scale": {"domain": [100, 20000]},
+           "type": "quantitative"
+         },
+         "x": {
+           "field": "year",
+           "timeUnit": "monthdate",
+           "title": "Month",
+           "axis": {"format": "%b"}
+         },
+         "y": {"title": "Location", "field": "location_type", "type": "nominal"}
+       },
+       "width": 600,
+       "height": 300,
+       "mark": "point",
+       "params": [
+         {"name": "brush", "select": {"type": "interval", "encodings": ["x"]}}
+       ],
+       "transform": [{"filter": {"param": "click"}}]
+     },
+     {
+       "encoding": {
+         "color": {
+           "condition": {
+             "param": "click",
+             "field": "recclass",
+             "scale": {
+               "domain": ["H4", "L4", "H6", "H5", "L5"],
+               "range": ["#e7ba52", "#a7a7a7", "#aec7e8", "#1f77b4", "#9467bd"]
+             }
+           },
+           "value": "lightgray"
+         },
+         "x": {"field": "id", "type": "quantitative"},
+         "y": {"title": "fall", "field": "fall", "type": "nominal"}
+       },
+       "width": 600,
+       "mark": "bar",
+       "tooltip": {"content": "data"},
+       "params": [
+         {"name": "click", "select": {"type": "point", "encodings": ["color"]}}
+       ],
+       "transform": [{"filter": {"param": "brush"}}]
+     }
+   ],
+   "config": {}
+ };
+     vegaEmbed("#vis3", spec2, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+   </script>
+   <p> text here tooo and in between the two viz</p>
+   <p> <h2 align = "right">text about the analysis here!</h2></p>
+   <div id="vis4"/>
+   <script>
+     var spec3 = {
+   "data": {
+     "url": "https://raw.githubusercontent.com/rkal0013/FIT3179/main/Meteorite_landings/meteorite_landings_prod.csv"
+   },
+   "mark": {"type": "circle", "tooltip": {"content": "data"}},
+   "params": [
+     {
+       "name": "Year",
+       "select": {"type": "point", "fields": ["year"]},
+       "bind": "legend"
+     }
+   ],
+   "encoding": {
+     "x": {"field": "mass", "type": "quantitative"},
+     "y": {"field": "year", "type": "quantitative"},
+     "size": {
+       "field": "year",
+       "type": "quantitative",
+       "title": "Year",
+       "scale": {"domain": [2015, 1000]}
+     },
+     "color": {"field": "year", "scale": {"scheme": "category20b"}},
+     "opacity": {"condition": {"param": "Year", "value": 1}, "value": 0.2}
+   },
+   "config": {}
+ };
+     vegaEmbed("#vis4", spec3, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+   </script>
+ <p> <h2 align = "right" >images to be filled in the white spaces so look out for meteorite images!</h2></p>
+</body>
+</html>
